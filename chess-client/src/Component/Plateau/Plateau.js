@@ -9,9 +9,27 @@ class Plateau extends React.Component{
         super(props);
 
         this.playerColor = 1;
+
+        this.state = {
+            selectedPiece: {},
+
+        }
     }
 
     isMoveLegit(){
+        return true;
+    }
+
+    handleClick(x, y){
+        let table = this.props.status;
+
+        //If we've clicked on a piece which is the same color as ours
+        if(table[x][y] !== 0 && table[x][y] * this.playerColor > 0)
+        {
+            this.setState({
+                selectedPiece: {x , y}
+            });
+        }
         
     }
 
@@ -56,6 +74,9 @@ class Plateau extends React.Component{
                 }
     
                 grillePieceElements.push(
+
+
+
                     <div 
                         key={k+'pieceGrille'}
                         className={'pieceElement'}
@@ -65,12 +86,41 @@ class Plateau extends React.Component{
     
                         </img>
                     </div>
+
+
+
                 );
             }
             
         }
 
         return grillePieceElements;
+    }
+
+    generateClickLayer(){
+    
+        let grilleClickElements = [];
+
+        for (let i = 0; i < 64 ; i++) 
+        {
+            let x = i % 8,
+                y = Math.floor(i / 8);
+
+            grilleClickElements.push(
+                <div 
+                    key={i+'clickGrille'}
+                    className="clickableCase"
+
+                    onClick={()=>this.handleClick(x, y)}
+                >
+                    
+                </div>
+            );
+
+            
+        }
+
+        return grilleClickElements;
     }
 
     loadPieceUrl(pieceID){
@@ -126,8 +176,12 @@ class Plateau extends React.Component{
             <div id='plateauCTN'>
                 {this.generateGrille()}
 
-                <div id='piecesCTN'>
+                <div id='piecesCTN' onClick={(e)=>this.handleClick(e)}>
                     {this.generatePieces()}
+                </div>
+
+                <div id='clickLayer'>
+                    {this.generateClickLayer()}
                 </div>
             </div>
         );
