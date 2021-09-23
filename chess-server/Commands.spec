@@ -5,6 +5,9 @@
 //---------------------------------LOGIN COMMANDS
 //==============================================================================================================
     //=============================================================//
+    NOTE :: AFTER SIGNIN, THE USER SHALL RECEIVE A MAIL, WHERE HE CAN FIND A LINK 
+    THAT IF CLICKED, WILL CONFIRM THE USER INSCRPTION
+
     commande: 'signIn'
     parameters:{
         email, pseudo, password
