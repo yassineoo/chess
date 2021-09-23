@@ -1,0 +1,16 @@
+
+#plateauCTN{
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+
+    width: 600px;
+    height: 600px;
+}
+
+.blackTile{
+    background-color: black;
+}
+
+.whiteTile{
+    background-color: white;
+}
