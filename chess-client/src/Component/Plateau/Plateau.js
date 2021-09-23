@@ -18,7 +18,7 @@ class Plateau extends React.Component{
 
             grilleCaseElements.push(
                 <div 
-                    key={i}
+                    key={i+'caseGrille'}
                     className={black ? 'blackTile': 'whiteTile'}
                 >
                     
@@ -31,10 +31,95 @@ class Plateau extends React.Component{
         return grilleCaseElements;
     }
 
+    generatePieces(){
+        let grillePieceElements = [];
+
+        for (let k = 0; k < 64 ; k++) 
+        {
+            let i = k % 8,
+                j = Math.floor(k / 8);
+
+            if(this.props.status[i][j] !== 0)
+            {
+                let position = {
+                    top: ( i * 75 ) + 'px',
+                    left: ( j * 75 ) + 'px'
+                }
+    
+                grillePieceElements.push(
+                    <div 
+                        key={k+'pieceGrille'}
+                        className={'pieceElement'}
+                        style={{...position}}
+                    >
+                        <img src={this.loadPieceUrl(this.props.status[i][j])}>
+    
+                        </img>
+                    </div>
+                );
+            }
+            
+        }
+
+        return grillePieceElements;
+    }
+
+    loadPieceUrl(pieceID){
+
+        let url = '';
+        let parentPath = '/Pieces/';
+
+        let absValue = Math.abs(pieceID);
+
+        switch (absValue) {
+            case 1:
+                url += 'pion';
+                break;
+
+            case 2:
+                url += 'cavalier';
+                break;
+
+            case 3:
+                url += 'tour';
+                break;
+
+            case 4:
+                url += 'fou';
+                break;
+
+            case 5:
+                url += 'roi';
+                break;
+
+            case 6:
+                url += 'reine';
+                break;
+
+            default:
+                break;
+        }
+
+        if(pieceID < 0)
+            url += 'NOIR';
+
+        else 
+            url += 'BLANC';
+
+        url += '.png';
+
+
+        return parentPath + url;
+    }
+
     render(){
         return(
             <div id='plateauCTN'>
                 {this.generateGrille()}
+
+                <div id='piecesCTN'>
+                    {this.generatePieces()}
+                </div>
             </div>
         );
     }

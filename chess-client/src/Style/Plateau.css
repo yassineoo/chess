@@ -2,15 +2,32 @@
 #plateauCTN{
     display: grid;
     grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+
+    width: 600px;
+    height: 600px;
+    padding: 0;
+}
+
+.blackTile{
+    background-color: rgb(173, 57, 57);
+}
+
+.whiteTile{
+    background-color: rgb(238, 123, 123);
+}
+
+#piecesCTN{
+    position: absolute;
 
     width: 600px;
     height: 600px;
 }
-
-.blackTile{
-    background-color: black;
+.pieceElement{
+    position: absolute;;
+    height: 75px;
 }
-
-.whiteTile{
-    background-color: white;
+.pieceElement img{
+    width: 100%;
+    height: 100%;
 }
