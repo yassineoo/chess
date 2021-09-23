@@ -1,3 +1,5 @@
+import {Spring, animated} from 'react-spring';
+
 import Plateau from "./Component/Plateau/Plateau";
 
 const plateauStatus = [
@@ -14,9 +16,19 @@ const plateauStatus = [
 function App() {
   return (
     <div className="App">
-      <center>
-      <Plateau status={plateauStatus}/>
-      </center>
+      <Spring
+        from={{opacity: 0}}
+        to={{opacity: 1}}
+      >
+      {(styles =>(
+          <animated.div style={{...styles, margin:'auto'}}>
+            <center>
+              <Plateau status={plateauStatus}/>
+            </center> 
+          </animated.div>
+      ))}
+      </Spring>
+
     </div>
   );
 }

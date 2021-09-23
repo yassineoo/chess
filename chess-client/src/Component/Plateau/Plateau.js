@@ -1,10 +1,18 @@
 import React from 'react';
+import {Spring} from 'react-spring';
+
 import '../../Style/Plateau.css'
 
 class Plateau extends React.Component{
 
     constructor(props){
-        super(props)
+        super(props);
+
+        this.playerColor = 1;
+    }
+
+    isMoveLegit(){
+        
     }
 
     generateGrille(){
@@ -43,7 +51,8 @@ class Plateau extends React.Component{
             {
                 let position = {
                     top: ( i * 75 ) + 'px',
-                    left: ( j * 75 ) + 'px'
+                    left: ( j * 75 ) + 'px',
+                    cursor: (this.playerColor * this.props.status[i][j] > 0 ? 'pointer' : 'initial')
                 }
     
                 grillePieceElements.push(
