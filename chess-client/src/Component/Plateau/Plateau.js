@@ -3,6 +3,16 @@ import {Spring, animated} from 'react-spring';
 
 import '../../Style/Plateau.css'
 
+const PIECE = {
+    NULL: 0,
+    PION: 1,
+}
+
+const COLOR = {
+    BLANC: 1,
+    NOIR: -1
+}
+
 class Plateau extends React.Component{
 
     constructor(props){
@@ -11,13 +21,78 @@ class Plateau extends React.Component{
         this.playerColor = 1;
 
         this.state = {
-            selectedPiece: {},
-
+            selectedPiece: null,
+            possibleMoves: null,
         }
+
+        
     }
 
     isMoveLegit(){
         return true;
+    }
+
+    findPossibleMoves(x, y, tour){
+        
+        let table = toggleDirection(this.props.status, tour),
+            possibleMoves = Array(8).fill(null).map(() => Array(8).fill(0));//Innit a 8x8 matrix (JS :/)
+
+
+        y = (tour == COLOR.NOIR) ? y : 8-y-1;
+
+        //PAWN
+        //==============================================================
+        if ( table[y][x] == PIECE.PION) 
+        {
+            let  pasclassique = false; // Si on peut fair un pas classique, on met cette variable a 1
+
+            //CLASSICAL MOVE
+            if ( table[y+1][x] === PIECE.NULL)
+            {
+                possibleMoves[y+1][x] = 1;
+                pasclassique = true;
+            }
+
+            //FIRST MOVE
+            if ( pasclassique && y == 1 )
+            {
+
+                if ( table[y+2][x] == PIECE.NULL )
+
+                    possibleMoves[y+2][x] = 1;
+
+            }
+
+            //TAKING OPPONENT'S PIECE
+            if ( y != 0 ) 
+            {
+                if ( x != 7 && table[y-1][x+1] * tour < 1)
+
+                    possibleMoves[y-1][x+1] = 1;
+
+                if ( x != 0 && table[y-1][x-1] * tour < 1 )
+
+                    possibleMoves[y-1][x-1] = 1;
+            }
+
+        }
+
+        return toggleDirection(possibleMoves, tour);
+        
+        function toggleDirection(table, tour){
+            if( tour == COLOR.BLANC )
+            {
+                let newTable = new Array(8);
+
+                for (let i = 0; i < 8; i++) 
+                    newTable[i] = [...table[8-i-1]];
+
+                return newTable;
+            }
+            else
+                return table;
+
+        }
     }
 
     handleClick(x, y){
@@ -26,22 +101,25 @@ class Plateau extends React.Component{
         //If we've clicked on a piece which is the same color as ours
         if(table[y][x] !== 0 && table[y][x] * this.playerColor > 0)
         {
+            
             this.setState({
-                selectedPiece: {x , y}
+                selectedPiece: {x , y},
+                possibleMoves: this.findPossibleMoves(x, y, this.playerColor),
             });
 
         }
         else
         {   
             this.setState({
-                selectedPiece: {}
+                selectedPiece: null,
+                possibleMoves: null
             });
         
         }
         
     }
 
-    generateGrille(selectedPiece){
+    generateGrille(selectedPiece, possibleMoves){
 
         let grilleCaseElements = [];
         let black = true;
@@ -55,12 +133,16 @@ class Plateau extends React.Component{
             let x = i % 8,
                 y = Math.floor(i / 8);
 
+            let isPieceSelected = selectedPiece !== null && (selectedPiece.x === x && selectedPiece.y === y),
+                isMovePossible = possibleMoves !== null && possibleMoves[y][x];
+
             let color = black ? '#769656' : '#eeeed2';
 
             grilleCaseElements.push(
                 <Spring
                     key={i+'caseGrille'}
-                    backgroundColor={selectedPiece.x == x && selectedPiece.y == y ? '#e2e25f' : color}
+                    backgroundColor={ isPieceSelected ? '#e2e25f' : color}
+
                 >
                 { styles => (
                     <animated.div 
@@ -68,6 +150,19 @@ class Plateau extends React.Component{
                         className={black ? 'blackTile': 'whiteTile'}
                         style={{...styles}}
                     >
+                    
+                    <Spring
+                        opacity={ isMovePossible ? '1' : '0'}
+                    >
+                    { styles => (
+                        <animated.div                             
+                            style={{...styles}}
+                            className="possibleMoveIcon" 
+                        >
+                        </animated.div>
+                    )}
+                    </Spring>
+                    
                         
                     </animated.div>
                 )}
@@ -154,7 +249,7 @@ class Plateau extends React.Component{
     loadPieceUrl(pieceID){
 
         let url = '';
-        let parentPath = '/Pieces/';
+        let parentPath = '/Pieces/svgCommon/';
 
         let absValue = Math.abs(pieceID);
 
@@ -193,7 +288,7 @@ class Plateau extends React.Component{
         else 
             url += 'BLANC';
 
-        url += '.png';
+        url += '.svg';
 
 
         return parentPath + url;
@@ -202,7 +297,7 @@ class Plateau extends React.Component{
     render(){
         return(
             <div id='plateauCTN'>
-                {this.generateGrille(this.state.selectedPiece)}
+                {this.generateGrille(this.state.selectedPiece, this.state.possibleMoves)}
 
                 <div id='piecesCTN' onClick={(e)=>this.handleClick(e)}>
                     {this.generatePieces()}
