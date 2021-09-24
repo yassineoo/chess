@@ -5,51 +5,7 @@
 //==============================================================================================================
 //---------------------------------LOGIN COMMANDS
 //==============================================================================================================
-    //=============================================================//
-    NOTE :: AFTER SIGNIN, THE USER SHALL RECEIVE A MAIL, WHERE HE CAN FIND A LINK 
-    THAT IF CLICKED, WILL CONFIRM THE USER INSCRPTION
 
-    commande: 'signIn'
-    parameters:{
-        email, pseudo, password
-    }
-    return:{
-        status,
-        errorMessage,
-    }
-
-    //=============================================================//
-    commande: 'logIn'
-    parameters:{
-        [email or pseudo], password
-    }
-    return:{
-        status,
-        token, 
-        errorMessage,
-    }
-
-    //=============================================================//
-    commande: 'logAsGuest'
-    parameters:{
-        
-    }
-    return:{
-        status,
-        name, //ex: Guest_145
-        token, 
-        errorMessage,
-    }
-
-    //=============================================================//
-    commande: 'logOut'
-    parameters:{
-        token
-    }
-    return:{
-        status,
-        errorMessage,
-    }
 
 //==============================================================================================================
 //---------------------------------ROOM COMMANDS (WAITING ROOM)
