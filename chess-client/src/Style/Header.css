@@ -1,0 +1,20 @@
+@font-face {
+    font-family: 'musamin';
+    src: url('./font/18 Khebrat\ Musamim\ Bold.ttf');
+}
+
+#headerCTN{
+    background-color: rgb(241, 234, 241);
+    box-shadow: 0 0 10px black;
+
+    margin-bottom: 20px;
+}
+
+#title-HEADER{
+    font-family: 'musamin';
+    font-size: 3em;
+
+    margin: 0;
+    margin-right: 40px;
+    text-align: right;
+}

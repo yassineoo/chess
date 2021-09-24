@@ -1,4 +1,5 @@
 import {Spring, animated} from 'react-spring';
+import Header from './Component/Header';
 
 import Plateau from "./Component/Plateau/Plateau";
 
@@ -22,6 +23,7 @@ function App() {
       >
       {(styles =>(
           <animated.div style={{...styles, margin:'auto'}}>
+            <Header />
             <center>
               <Plateau status={plateauStatus}/>
             </center> 

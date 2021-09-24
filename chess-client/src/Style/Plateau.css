@@ -17,6 +17,10 @@
     background-color: #eeeed2;
 }
 
+.playerTile:hover{
+    cursor: pointer;
+}
+
 /****************************************************************/
 #piecesCTN{
     position: absolute;

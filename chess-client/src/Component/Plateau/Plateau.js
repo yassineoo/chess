@@ -1,5 +1,5 @@
 import React from 'react';
-import {Spring} from 'react-spring';
+import {Spring, animated} from 'react-spring';
 
 import '../../Style/Plateau.css'
 
@@ -24,31 +24,55 @@ class Plateau extends React.Component{
         let table = this.props.status;
 
         //If we've clicked on a piece which is the same color as ours
-        if(table[x][y] !== 0 && table[x][y] * this.playerColor > 0)
+        if(table[y][x] !== 0 && table[y][x] * this.playerColor > 0)
         {
             this.setState({
                 selectedPiece: {x , y}
             });
+
+        }
+        else
+        {   
+            this.setState({
+                selectedPiece: {}
+            });
+        
         }
         
     }
 
-    generateGrille(){
+    generateGrille(selectedPiece){
+
         let grilleCaseElements = [];
         let black = true;
 
         for (let i = 0; i < 64 ; i++) 
         {
+
             if (i % 8 != 0)
                 black = !black;
 
+            let x = i % 8,
+                y = Math.floor(i / 8);
+
+            let color = black ? '#769656' : '#eeeed2';
+
             grilleCaseElements.push(
-                <div 
+                <Spring
                     key={i+'caseGrille'}
-                    className={black ? 'blackTile': 'whiteTile'}
+                    backgroundColor={selectedPiece.x == x && selectedPiece.y == y ? '#e2e25f' : color}
                 >
-                    
-                </div>
+                { styles => (
+                    <animated.div 
+                        
+                        className={black ? 'blackTile': 'whiteTile'}
+                        style={{...styles}}
+                    >
+                        
+                    </animated.div>
+                )}
+                </Spring>
+                
             );
 
             
@@ -106,10 +130,14 @@ class Plateau extends React.Component{
             let x = i % 8,
                 y = Math.floor(i / 8);
 
+            
+            let isPlayersTile = this.props.status[y][x] * this.playerColor > 0;
+
             grilleClickElements.push(
                 <div 
                     key={i+'clickGrille'}
                     className="clickableCase"
+                    className={isPlayersTile? 'playerTile' : 'adversaireTile'}
 
                     onClick={()=>this.handleClick(x, y)}
                 >
@@ -174,7 +202,7 @@ class Plateau extends React.Component{
     render(){
         return(
             <div id='plateauCTN'>
-                {this.generateGrille()}
+                {this.generateGrille(this.state.selectedPiece)}
 
                 <div id='piecesCTN' onClick={(e)=>this.handleClick(e)}>
                     {this.generatePieces()}
