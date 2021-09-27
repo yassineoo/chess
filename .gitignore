@@ -2,7 +2,9 @@
 
 # dependencies
 /chess-client/node_modules
+/node_modules
 /.pnp
+/.env
 .pnp.js
 
 # testing

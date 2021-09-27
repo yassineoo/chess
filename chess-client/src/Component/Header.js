@@ -6,7 +6,7 @@ export class Header extends Component {
         return (
             <div id="headerCTN">
                 <h2 id='title-HEADER'>
-                    سَطرانجا  
+                 لعبة الشطرنج
                 </h2>
 
             </div>
