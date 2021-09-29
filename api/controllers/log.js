@@ -38,6 +38,9 @@ login =async(req,res)=> {
            console.log('wrong  password ');
           return res.redirect('/login')
        }
+       req.session.logged = true
+       req.session.player = player;
+       res.redirect('/');
        return res.status(200).send('hi')
       }
       
