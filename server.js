@@ -1,5 +1,5 @@
 
-//  inseatlization   .....................
+//  initialisation   .....................
 require("dotenv").config();
 const connect = require('./api/db/connect.js');
 const express = require('express')
@@ -50,36 +50,37 @@ const rooms={};
 
 wss.on('connection', function connect(ws) {
 
-  const clientId = guid(); //guid is function generat random id 
-  const  player= new Player(ws,clientId)
-  clientsx[clientId] =player
+  const clientId = guid(); //guid is function generate a random id/token 
+  const player = new Player(ws,clientId)
+  clientsx[clientId] = player
   
   const payLoad = {
     "method": "hello",
     "clientId": clientId,
   }
   console.log(payLoad);
-   //send back the client connect id
-    ws.send(JSON.stringify(payLoad))
+  //send back the client connect id
+  ws.send(JSON.stringify(payLoad))
 
 
   ws.on('message', function incoming(data) {
 
     
     if ( isJsonParsable(data)){
-      obj=JSON.parse(data)
-      console.log(obj)
-     switch (obj.method) {
+        obj=JSON.parse(data)
+        console.log(obj)
+        
+        switch (obj.method) {
          //------------------------
           case "creatRoom" : 
             if(!obj.room){
-            const roomId = guid(); //guid is function generat random id 
-            let room=new Room(obj.white,obj.black,obj.owner,roomId,obj.password,obj.time);
-            rooms[roomId] = room
-            ws.send(JSON.stringify({"method":"roomCreated",room}))
+                const roomId = guid(); //guid is function generate a random id 
+                let room=new Room(obj.white, obj.black, obj.owner, roomId, obj.password, obj.time);
+                rooms[roomId] = room
+                ws.send(JSON.stringify({"method":"roomCreated",room}))
             }
             
-          break;
+            break;
           //--------------------------------------
           case "join" :
             console.log("join ask")
