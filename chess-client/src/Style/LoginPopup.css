@@ -1,0 +1,107 @@
+
+
+#LoginPopupOVERLAY-CTN{
+    top: 0;
+    left: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    background-color: #0008;
+
+    z-index: 99;
+}
+
+#LoginPopup-CTN{
+    top: 20%;
+    position: relative;
+    
+    margin-top: 400px;
+
+    padding: 20px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 10px black;
+
+    width: 29%;
+    min-height: 40%;
+
+    margin: auto;
+
+    font-size: 1.2em;
+
+    display: flex;
+    flex-direction: column;
+
+}
+/*****************/
+#loginHeaderCTN{
+    display: flex;
+    justify-content: space-between;
+}
+#loginHeaderCTN h1{
+    margin: 0;
+}
+#XbtnLogin{
+    cursor: pointer;
+}
+#XbtnLogin:hover{
+    opacity: 0.8;
+}
+/*****************/
+
+.popupElements{
+    width: 100%;
+    text-align: right;
+
+    display: flex;
+    
+    margin-top: 10px;
+}
+#titlePopupLog{
+    font-size: 2.2em;
+    font-weight: bold;
+    text-decoration: underline;
+
+    display: block;
+}
+.popupElements label{
+
+    display: inline-block;
+
+    flex: 1;
+}
+.popupElements input{
+    margin-top: 2px;
+
+    text-align: right;
+    flex: 2;
+
+    height: 1em;
+}
+/******************/
+#btnPopUp-CTN{
+    margin-top: 40px;
+}
+
+.LoginButton{
+    background-color: rgb(104, 172, 37);
+    font-family: 'musamin';
+    font-size: 1.3em;
+
+    color: white;
+    border: 0;
+    display: block;
+
+    cursor: pointer;
+
+    margin: auto;
+    padding-bottom: 10px;
+
+    min-width: 160px;
+
+}
+
+.LoginButton:hover{
+    opacity: 0.8;
+}

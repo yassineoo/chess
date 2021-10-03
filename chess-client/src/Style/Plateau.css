@@ -19,10 +19,6 @@
     background-color: #eeeed2;
 }
 
-.playerTile:hover{
-    cursor: pointer;
-}
-
 .possibleMoveIcon{
     background-color: #e2e25fcc;
     position: relative;
@@ -33,6 +29,10 @@
     height: 40%;
 
     border-radius: 10px;
+}
+
+.highLightedTile:hover{
+    cursor: pointer;
 }
 
 /****************************************************************/
@@ -53,6 +53,7 @@
 
 /****************************************************************/
 #clickLayer{
+    z-index: 20;
     position: absolute;
 
     opacity: 0;
@@ -68,4 +69,7 @@
 
 .clickableCase{
     opacity: 0;
+}
+.playerTile:hover{
+    cursor: pointer;
 }

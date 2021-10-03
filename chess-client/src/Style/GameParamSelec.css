@@ -1,0 +1,85 @@
+#GameParamOVERLAYCTN{
+    top: 0;
+    left: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    background-color: #0008;
+
+    z-index: 99;
+}
+
+#GameParamCTN{
+    top: 20%;
+    position: relative;
+    
+    margin-top: 400px;
+
+    padding: 20px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 10px black;
+
+    width: 29%;
+    min-height: 40%;
+
+    margin: auto;
+
+    font-size: 1.2em;
+
+    display: flex;
+    flex-direction: column;
+}
+/*****************/
+#popupHeaderCTN{
+    display: flex;
+    justify-content: space-between;
+}
+#popupHeaderCTN h1{
+    font-family: musamin;
+    margin: 0;
+}
+#Xbtn{
+    cursor: pointer;
+}
+#Xbtn:hover{
+    opacity: 0.8;
+}
+/***********************/
+
+.colorBTN{
+    width: 70px;
+    height: 70px;
+
+    padding: 7px;
+    margin: 20px;
+
+    border-radius: 7px;
+    border: 3px solid black;
+
+    cursor: pointer;
+}
+
+#selectedColorBTN{
+    border: 3px solid rgb(22, 255, 22);
+    box-shadow: 0 0 10px rgb(22, 255, 22);
+    background-color: rgb(241, 234, 241);
+}
+
+#popupBTN{
+    background-color: rgb(104, 172, 37);
+    font-family: 'musamin';
+    font-size: 1.3em;
+
+    color: white;
+    border: 0;
+    display: block;
+
+    cursor: pointer;
+
+    margin: auto;
+    padding-bottom: 5px;
+
+    min-width: 160px;
+}
