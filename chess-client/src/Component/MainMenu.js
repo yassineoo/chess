@@ -110,7 +110,7 @@ export default class MainMenu extends Component {
                     </div>
 
                     <div id="mainMenuInterface">
-                        <h1> ! أهلًا وسهلًازميلناالسطرنجي </h1>
+                        <h1> ! أهلًا وسهلًا بك زميلنا الشطرنجي </h1>
 
                         <button 
                             onClick={this.initCreateRoom.bind(this)}
@@ -123,14 +123,14 @@ export default class MainMenu extends Component {
                             onClick={this.initJoinRoom.bind(this)}
                             className="mainMenuBTN"
                         >
-                            إنضمام إلى غرفة     
+                            الإنضمام إلى غرفة     
                         </button>
 
                         <button 
                             onClick={this.initIA.bind(this)}
                             className="mainMenuBTN"
                         >
-                            لعب ضد الحاسوب
+                            اللعب ضد الحاسوب  
                         </button>
                     </div>
                 </div>

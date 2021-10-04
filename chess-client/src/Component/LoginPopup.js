@@ -182,11 +182,11 @@ export default class LoginPopup extends Component {
                 </div>
                 <div className="popupElements">
                     <input type="password"  onChange={(e)=>this.mdp = e.target.value}/> 
-                    <label>:كلمة السرية</label> 
+                    <label>:كلمة السر</label> 
                 </div>
                 <div className="popupElements">
                     <input type="password"  onChange={(e)=>this.reMdp = e.target.value}/> 
-                    <label>:تأكيد الكلمة السرية </label> 
+                    <label>:تأكيد الكلمة السر </label> 
                 </div>
 
                 <div id="btnPopUp-CTN">
@@ -228,11 +228,11 @@ export default class LoginPopup extends Component {
             </div>
             <div className="popupElements">
                 <input type="password"  onChange={(e)=>this.mdp = e.target.value}/> 
-                <label>:كلمة السرية</label> 
+                <label>:كلمة السر</label> 
             </div>
 
             <div className="popupElements">
-                <a href="#">هل نسيت كلمة السرية الخاصة بك؟</a>
+                <a href="#">هل نسيت كلمة السر الخاصة بك؟</a>
             </div>
 
             <div id="btnPopUp-CTN">
@@ -263,7 +263,7 @@ export default class LoginPopup extends Component {
                         onClick={this.props.handleHideLogin}
                     />
                     <h1>
-                        ! مليح 
+                        ! جيد 
                     </h1>
                 </div>
                 <hr width="90%" style={{backgroundColor: 'black'}}/>
@@ -272,7 +272,7 @@ export default class LoginPopup extends Component {
                     تحقق من بريدك  
                 </div> 
                 <div className="popupElements">
-                    لقد تم بعث بريدا إلكترونيا في صندوق البريد الإلكتروني الخاص بك، للتحقق من حسابك 
+                    لقد تم ارسال بريد التحقق من حسابك الى البريد الإلكتروني الخاص بك
                 </div>
 
                 <div id="btnPopUp-CTN">

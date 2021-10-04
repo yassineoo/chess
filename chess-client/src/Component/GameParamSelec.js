@@ -28,7 +28,7 @@ export default class GameParamSelec extends Component {
                         onClick={this.props.handleHideParam}
                     />
                     <h1>
-                        مميزات اللعبة
+                           اعدادات اللعبة
                     </h1>
                 </div>
 
