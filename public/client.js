@@ -3,16 +3,23 @@
 
 let ws,clientId,player,role,room;
 PORT = 5000
-creat = document.getElementById("creat");
+/*creat = document.getElementById("creat");
 wb =document.getElementById("wb"); // white or black
+//if this is true no pass required anyone can join
+randomJoin = document.getElementById("randomJoin"); 
+
 roomPass = document.getElementById("roomPass");
 gametime = document.getElementById("gametime");
 join = document.getElementById("join");
+// if this is true no pass and no id required join any open room
+joinRandom = document.getElementById("randomJoin");
+// if false u have to enter id and pass
 joinId = document.getElementById("joinId");
+// if there is no pass u will join like spec
 joinPass = document.getElementById("joinPass");
 leave = document.getElementById("leave");
 username = document.getElementById("username");
-
+token = localStorage.getItem("token");*/
 //***************************************************************************/
 
 // websocket part ----------------------------------------------------------
@@ -21,7 +28,21 @@ username = document.getElementById("username");
       ws = new WebSocket(`ws://localhost:${PORT}`);
       ws.onopen = () => {
         console.log('Connection opened!')
+
+        console.log(ws)
+        const payLoad = {
+          "method": "joinServer",
+          "clientId": "token",
+          ws
+        }
+        console.log(payLoad)
+        console.log("ss "+JSON.stringify(payLoad));
+
+        ws.send(JSON.stringify(payLoad))
+
+
       };
+      
       
       ws.onmessage = ({ data }) =>{
         console.log(data)
@@ -85,15 +106,14 @@ username = document.getElementById("username");
       }
       let white,black,owner="white";
       console.log(player)
-      if (wb.cheaked) {black=player; owner="black"}
-      else white = player
       ws.send(JSON.stringify({
         "method":"creatRoom",
         "password":roomPass.value,
         "time" : gametime.value, 
-        "black":black||null,
-        "white":white||null ,
-        owner
+        "player":player,
+        "color":wb.value,
+         owner,
+      
   }))
 
   }   

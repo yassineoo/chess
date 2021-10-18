@@ -50,17 +50,8 @@ const rooms={};
 
 wss.on('connection', function connect(ws) {
 
-  const clientId = guid(); //guid is function generate a random id/token 
-  const player = new Player(ws,clientId)
-  clientsx[clientId] = player
-  
-  const payLoad = {
-    "method": "hello",
-    "clientId": clientId,
-  }
-  console.log(payLoad);
   //send back the client connect id
-  ws.send(JSON.stringify(payLoad))
+ // ws.send(JSON.stringify(payLoad))
 
 
   ws.on('message', function incoming(data) {
@@ -71,14 +62,18 @@ wss.on('connection', function connect(ws) {
         console.log(obj)
         
         switch (obj.method) {
+         //-------------------------
+         case "hello" : 
+
+
          //------------------------
           case "creatRoom" : 
-            if(!obj.room){
-                const roomId = guid(); //guid is function generate a random id 
-                let room=new Room(obj.white, obj.black, obj.owner, roomId, obj.password, obj.time);
+           
+                let roomId = guid(); //guid is function generate a random id 
+                let room=new Room(obj.player,obj.color, roomId, obj.password, obj.time);
                 rooms[roomId] = room
                 ws.send(JSON.stringify({"method":"roomCreated",room}))
-            }
+            
             
             break;
           //--------------------------------------
@@ -118,10 +113,19 @@ wss.on('connection', function connect(ws) {
             }
              else ws.send((JSON.stringify({"method":"wrongRoomId"})))
             break;
+
+           //--------------------------------------------
+
+          case "joinRandom":
+                             
+ 
+
+            break;
+        //------------------------------------
           
         //------------------------------------
           case "leaveTheRoom" :
-               let roomId=obj.roomId;
+                roomId=obj.roomId;
                if (obj.role ==="whitePlayer"||obj.role ==="blackPlayer")  {
 
                  rooms[roomId].game.state = "end";
@@ -178,6 +182,19 @@ wss.on('connection', function connect(ws) {
           }
            
          break;
+
+         case "Drawoffer":
+
+          room = rooms[obj.roomId]
+          if(room.game.state == "playing"){
+            room.game.plateauStatus = obj.plateauStatus
+          sendToAll(obj.roomId,{
+            game:room.game
+          })
+          }
+           
+         break;
+         
      }
 
     }

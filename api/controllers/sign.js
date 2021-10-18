@@ -30,7 +30,11 @@ signin = async (req,res)=>{
         // Validate user input
         if (!(email && password && name)) {
             console.log('All input is required');
-          res.status(400).send("All input is required");
+            res.status(400).json({
+              status:false,
+              errorMessage:"All inputs are required"
+              
+            });
         }
       tmp = await Player.findOne({email});
       console.log("***",tmp);
@@ -38,7 +42,11 @@ signin = async (req,res)=>{
      {
        req.flash('message','this email is already exists');
        console.log('this email is already exists');
-       res.redirect('sign')
+       res.status(400).json({
+        status:false,
+        errorMessage:"this email is already exists"
+        
+      });
      }
     else {
      let encryptedPassword = await bcrypt.hash(password, 10);
@@ -47,7 +55,7 @@ signin = async (req,res)=>{
             name,
             email: email.toLowerCase(), // sanitize: convert email to lowercase
             password: encryptedPassword,
-            id : guid(),
+            
           }
      );
       // Create token
@@ -59,11 +67,9 @@ signin = async (req,res)=>{
         }
       );
       // save user token
-      console.log('player created succsefly');
-      player.token = token;
       const url = `http://localhost:${process.env.PORT}/sign/${token}`
       transporter.sendMail({
-        from : 'saddam48hd@gmail.com',
+        from : process.env.email,
         to: email,
         subject: 'Verify Account',
         html: `Click <a href = '${url}'>here</a> to confirm your email.`
@@ -77,8 +83,12 @@ signin = async (req,res)=>{
       //res.status(201).json(user);
       console.log('player created succsefly');
      req.flash('message','player created succsefly');
-     res.status(201).redirect('sign')
-    }
+     res.status(201).json({
+      status:true,
+    
+      
+    });
+  }
         
     } catch (error) {
        res.status(500).json(error,'something goes wrong please try again');
@@ -101,29 +111,31 @@ signin = async (req,res)=>{
            token,
            process.env.SECRET
         );
-    } catch (err) {
-        return res.status(500).send(err);
-    }
-    try{
+
+
         // Step 2 - Find user with matching ID
         console.log(payload);
         const user = await Player.findOne({ _id: payload.user_id }).exec();
         if (!user) {
             console.log('User does not  exists ');
-           return res.status(404).send({ 
-              message: "User does not  exists" 
+            return res.status(404).json({ 
+              status : false,
+              errorMessage: "User does not  exists" 
            });
         }
         // Step 3 - Update user verification status to true
         user.confirmed= true;
         await user.save();
         console.log('Account Verified ');
-        return res.status(200).send({
-              message: "Account Verified"
-             
-        });
+        return res.status(200).json({
+          status : true,
+          token: "Account Verified"
+          });
      } catch (err) {
-        return res.status(500).send(err);
+      return res.status(500).json({
+        status : false,
+        errorMessage: "server error :"+err
+       });
      }
 }
 module.exports={getsign,signin,verify}
