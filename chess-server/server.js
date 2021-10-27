@@ -10,11 +10,16 @@ const session = require('express-session');
 const flash = require('req-flash');
 const path = require('path')
 const WebSocket = require('ws');
-const Player  = require("./chess-server/player");
-const Room  = require("./chess-server/room");
-const { uri,PORT } = process.env;
+
+
+const Player  = require("./Class/player");
+const Room  = require("./Class/room");
+
+
+const { uri, PORT } = process.env;
 console.log(PORT)
 // middelwares and routes ----------------------
+
 app.use(express.urlencoded( { extended:false } ));
 app.use(session({
     secret: 'keyboard cat',
@@ -28,11 +33,12 @@ app.use(express.json());
 app.use(flash());
 app.set('view engine',"ejs");
 app.use(express.static(path.join(__dirname, 'public')));
-app.get('/', (req, res) => {
 
-  
+
+app.get('/', (req, res) => {
   res.status(200).render('client')
 })
+
 app.use('/login',log);
 app.use('/sign',sign);
 
