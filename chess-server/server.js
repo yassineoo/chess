@@ -1,6 +1,7 @@
 
 //  initialisation   .....................
 require("dotenv").config();
+
 const connect = require('./api/db/connect.js');
 const express = require('express')
 const log = require('./api/routes/login')
@@ -33,8 +34,13 @@ app.use(express.json());
 app.use(flash());
 app.set('view engine',"ejs");
 app.use(express.static(path.join(__dirname, 'public')));
+//app.use(express.static('./chess-client/build'));
+/*
+app.use('/', (req, res, next)=>{
+    res.sendFile(path.join(__dirname, './chess-client/build/index.html'));
 
-
+})
+*/
 app.get('/', (req, res) => {
   res.status(200).render('client')
 })
@@ -265,7 +271,7 @@ function S4() {
 const guid = () => (S4() + S4() + "-" + S4() + "-4" + S4().substr(0,3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
 
 
-sendToAll = (roomId,obj)=>{
+const sendToAll = (roomId,obj)=>{
   for (let index = 0; index < rooms[roomId].spectators.length; index++) {
     const element = rooms[roomId].spectators[index];
    clientsx[element.id].ws.send(obj)

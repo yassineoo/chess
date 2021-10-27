@@ -5,6 +5,9 @@
 /node_modules
 /.pnp
 /.env
+/chess-server/node_modules
+/chess-server/.pnp
+/chess-server/.env
 .pnp.js
 
 # testing
