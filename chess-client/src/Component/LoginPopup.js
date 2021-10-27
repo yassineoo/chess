@@ -29,12 +29,12 @@ export default class LoginPopup extends Component {
 
     }
 
-    executeSignIn(){
-
+    executeSignIn(obj){
+        console.log("signed", obj);
     }
 
-    executeLogin(){
-
+    executeLogin(obj){
+        console.log("logged", obj);
     }
 
     signAjax(){
@@ -47,10 +47,10 @@ export default class LoginPopup extends Component {
             reMdpError: false,   
         }
 
-        errors.emailError = ( this.email.length == 0 || false);
+        errors.emailError = ( this.email.length === 0 || false);
         errors.mdpError = ( this.mdp.length < 8 );
-        errors.reMdpError = ( this.reMdpError != this.mdp );
-        errors.nameError = ( this.name.length == 0 );
+        errors.reMdpError = ( this.reMdpError !== this.mdp );
+        errors.nameError = ( this.name.length === 0 );
 
         
 
@@ -75,14 +75,14 @@ export default class LoginPopup extends Component {
 
             xhttp.onreadystatechange = ()=>{
 
-                if (this.readyState == 4 && this.status == 200) 
+                if (this.readyState === 4 && this.status === 200) 
                 {
                     let rawJSON = xhttp.responseText;
                     let objRes = JSON.parse(rawJSON);
 
                     if(objRes.status)
 
-                        self.executeSignIn();
+                        self.executeSignIn(objRes);
 
                     else 
 
@@ -106,7 +106,7 @@ export default class LoginPopup extends Component {
             mdpError: false,
         }
 
-        errors.nameError = ( this.name.length == 0 );
+        errors.nameError = ( this.name.length === 0 );
         errors.mdpError = ( this.mdp.length === 0 );
         
 
@@ -131,14 +131,14 @@ export default class LoginPopup extends Component {
 
             xhttp.onreadystatechange = ()=>{
 
-                if (this.readyState == 4 && this.status == 200) 
+                if (this.readyState === 4 && this.status === 200) 
                 {
                     let rawJSON = xhttp.responseText;
                     let objRes = JSON.parse(rawJSON);
 
                     if(objRes.status)
 
-                        self.executeLogin();
+                        self.executeLogin(objRes);
 
                     else 
 
@@ -153,6 +153,9 @@ export default class LoginPopup extends Component {
         }
         
     }
+
+
+    
 
     showInscriptionScreen(){
 
@@ -182,11 +185,11 @@ export default class LoginPopup extends Component {
                 </div>
                 <div className="popupElements">
                     <input type="password"  onChange={(e)=>this.mdp = e.target.value}/> 
-                    <label>:كلمة السر</label> 
+                    <label>:كلمة السرية</label> 
                 </div>
                 <div className="popupElements">
                     <input type="password"  onChange={(e)=>this.reMdp = e.target.value}/> 
-                    <label>:تأكيد الكلمة السر </label> 
+                    <label>:تأكيد الكلمة السرية </label> 
                 </div>
 
                 <div id="btnPopUp-CTN">
@@ -228,11 +231,11 @@ export default class LoginPopup extends Component {
             </div>
             <div className="popupElements">
                 <input type="password"  onChange={(e)=>this.mdp = e.target.value}/> 
-                <label>:كلمة السر</label> 
+                <label>:كلمة السرية</label> 
             </div>
 
             <div className="popupElements">
-                <a href="#">هل نسيت كلمة السر الخاصة بك؟</a>
+                <a href="#">هل نسيت كلمة السرية الخاصة بك؟</a>
             </div>
 
             <div id="btnPopUp-CTN">
@@ -263,7 +266,7 @@ export default class LoginPopup extends Component {
                         onClick={this.props.handleHideLogin}
                     />
                     <h1>
-                        ! جيد 
+                        ! مليح 
                     </h1>
                 </div>
                 <hr width="90%" style={{backgroundColor: 'black'}}/>
@@ -272,7 +275,7 @@ export default class LoginPopup extends Component {
                     تحقق من بريدك  
                 </div> 
                 <div className="popupElements">
-                    لقد تم ارسال بريد التحقق من حسابك الى البريد الإلكتروني الخاص بك
+                    لقد تم بعث بريدا إلكترونيا في صندوق البريد الإلكتروني الخاص بك، للتحقق من حسابك 
                 </div>
 
                 <div id="btnPopUp-CTN">

@@ -19,11 +19,11 @@ export class Header extends Component {
                     id='connextion-HEADER'
                     onClick={this.props.handleDisplayLogin}
                 >
-                    تسجيل الدخول
+                    الإتصال
                 </button>
 
                 <h2 id='title-HEADER'>
-                  لعبة الشطرنج 
+                    سَطرانجا  
                 </h2>
 
 

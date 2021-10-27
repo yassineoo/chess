@@ -79,7 +79,9 @@ export default class Piece extends Component {
                     opacity: this.props.fadeIn ? '0' : '1',
                 }}
 
-                onRest={this.props.HandleEndMoveAnim}
+                onRest={ ()=>
+                        this.props.HandleEndMoveAnim(this.props.translation)
+                    }
             >
                 { styles => (
                     <animated.div

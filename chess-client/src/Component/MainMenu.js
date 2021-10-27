@@ -16,12 +16,12 @@ const COLOR = {
 const plateauStatus = [
   [-3, -2, -4, -5, -6, -4, -2, -3],
   [-1, 0, -1, -1, -1, -1, -1, -1],
+  [0, 0, 2, 1, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 4, 0],
+  [0, -1, 0, 0, 3, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, -1, 0, -1, 0, 0, 0, 0],
-  [0, 0, 1, 0, 0, 0, 0, 0],
   [1, 1, 0, 1, 1, 1, 1, 1],
-  [3, 2, 4, 6, 5, 4, 2, 3],
+  [0, 2, 4, 6, 5, 4, 2, 3],
 ];
 
 const move = {
@@ -54,18 +54,24 @@ export default class MainMenu extends Component {
             case "CREATE":
                 
                 this.launchCreateRoom(gameParam);
+                break;
 
             case "JOIN":
             
                 this.launchJoinRoom(gameParam);
+                break;
 
             case "IA":
         
                 this.launchIA(gameParam);
+                break;
+
+            default:
+                break;
 
         }
     }
-    
+
     //=============================================
 
     initCreateRoom(){
@@ -106,11 +112,13 @@ export default class MainMenu extends Component {
                         <Plateau 
                             status={plateauStatus}
                             move={move}
+
+                            clickable={false}
                         />
                     </div>
 
                     <div id="mainMenuInterface">
-                        <h1> ! أهلًا وسهلًا بك زميلنا الشطرنجي </h1>
+                        <h1> ! أهلًا وسهلًازميلناالسطرنجي </h1>
 
                         <button 
                             onClick={this.initCreateRoom.bind(this)}
@@ -123,14 +131,14 @@ export default class MainMenu extends Component {
                             onClick={this.initJoinRoom.bind(this)}
                             className="mainMenuBTN"
                         >
-                            الإنضمام إلى غرفة     
+                            إنضمام إلى غرفة     
                         </button>
 
                         <button 
                             onClick={this.initIA.bind(this)}
                             className="mainMenuBTN"
                         >
-                            اللعب ضد الحاسوب  
+                            لعب ضد الحاسوب
                         </button>
                     </div>
                 </div>
@@ -146,3 +154,5 @@ export default class MainMenu extends Component {
         )
     }
 }
+
+

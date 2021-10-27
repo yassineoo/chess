@@ -7,6 +7,11 @@ import Piece from './Piece';
 const PIECE = {
     NULL: 0,
     PION: 1,
+    CAVALIER: 2,
+    TOUR: 3,
+    FOU: 4,
+    ROI: 5,
+    REINE: 6
 }
 
 const COLOR = {
@@ -17,41 +22,87 @@ const COLOR = {
 class Plateau extends React.Component{
 
     constructor(props){
+
+        console.log('neu');
         super(props);
 
-        this.playerColor = 1;
+        this.playerColor = props.color;
         this.newMovePosition = null;
         this.newMovePositionStyle = null;
+
 
         this.state = {
             selectedPiece: null,
             possibleMoves: null,
             moving: false,
-            renderingLastMove: false,
+            renderingLastMove: true,
+
+            turn: -1,
+            clickable: props.clickable,
         }
 
         
     }
 
-    static getDerivedStateFromProps(props, state){
-        return {
-            renderingLastMove: true,
-        }
+    componentDidUpdate(){
+
     }
 
-    HandleEndMoveAnim(){
+    static getDerivedStateFromProps(props, state){
+        if (state.turn !== props.turn)
 
-        if( this.state.renderingLastMove )
+        console.log("new Turn");
+        if (state.turn !== props.turn)
+        
+            return {
+                renderingLastMove: true,
+                selectedPiece: null,
+                possibleMoves: null,
+                moving: false,
+                renderingLastMove: true,
+
+                clickable: props.clickable,
+
+                turn: props.turn,
+            }
+        else 
+            return {};
+    }
+
+    HandleEndMoveAnim(moveType){
+        //moveType(boolean): either the end of the fadeIn or translation animation
+
+        if(!moveType)
+            return;
+
+        
+        if( this.state.renderingLastMove ){
 
             this.setState({renderingLastMove : false});
 
-        else if ( this.state.moving ) {
+        }
+
+        else if ( this.state.moving ) 
+        {
+            let altMovePosition = {
+                y: this.state.selectedPiece.y,
+                x: this.state.selectedPiece.x
+            };
             
+            this.props.handleComfirmMove(altMovePosition, this.newMovePosition)
         }
 
     }
 
-    handleClick(x, y){
+    handleClick(x, y, clickable){
+
+        if(!clickable)
+            return;
+
+        if(this.state.moving)
+            return;
+
+
         let table = this.props.status;
 
 
@@ -70,14 +121,19 @@ class Plateau extends React.Component{
             
             this.setState({
                 selectedPiece: {x , y},
-                possibleMoves: this.findPossibleMoves(x, y, this.playerColor),
+                possibleMoves: Plateau.findPossibleMoves(x, y, this.playerColor, this.props.status),
             });
 
         }
         
         //If we've selected a piece and clicked on a legit position to make a move
-        else if ( this.state.selectedPiece && this.state.possibleMoves[y][x] == 1 )
+        else if ( this.state.selectedPiece && this.state.possibleMoves[y][x] === 1 )
         {
+            let altMovePosition = {
+                y: this.state.selectedPiece.y,
+                x: this.state.selectedPiece.x
+            };
+
             this.newMovePosition = { x, y };
             this.newMovePositionStyle = {
                 top: (y * 75) + 'px',
@@ -85,7 +141,8 @@ class Plateau extends React.Component{
             }
             this.setState({
                 moving: true,
-                possibleMoves: null
+                possibleMoves: null,
+                clickable: false,
             })
         }
         else
@@ -103,7 +160,7 @@ class Plateau extends React.Component{
     //Generate the bottom grid layer 
     generateGrille(selectedPiece, possibleMoves){
 
-        let grilleCaseElements = [];
+        let tableCaseElements = [];
         let black = true;
 
         for (let i = 0; i < 64 ; i++) 
@@ -122,7 +179,7 @@ class Plateau extends React.Component{
 
             let color = black ? '#769656' : '#eeeed2';
 
-            grilleCaseElements.push(
+            tableCaseElements.push(
                 //The first spring corresponds to the selected piece
                 <Spring
                     key={i+'caseGrille'}
@@ -157,12 +214,12 @@ class Plateau extends React.Component{
             
         }
 
-        return grilleCaseElements;
+        return tableCaseElements;
     }
 
     generatePieces(selectedPiece, moving, renderingLastMove){
 
-        let grillePieceElements = [];
+        let tablePieceElements = [];
 
         let precMove = this.props.move.previousPieceInfo,
             newMove = this.props.move.newPieceInfo,
@@ -184,7 +241,7 @@ class Plateau extends React.Component{
 
 
                 let positionStyle, newPositionStyle;
-                if (beenMovedLastTurn)
+                if (beenMovedLastTurn && renderingLastMove)
                 {
                     positionStyle = {
                         top: ( precMove.y * 75 ) + 'px',
@@ -205,7 +262,7 @@ class Plateau extends React.Component{
                 }
                 
 
-                grillePieceElements.push(
+                tablePieceElements.push(
 
                     <Piece 
                         pieceID={this.props.status[i][j]}
@@ -216,9 +273,9 @@ class Plateau extends React.Component{
                         position={positionStyle}
                         newPosition={newPositionStyle}
 
-                        HandleEndMoveAnim={()=>this.HandleEndMoveAnim()}
+                        HandleEndMoveAnim={(moveType)=>this.HandleEndMoveAnim(moveType)}
 
-                        key={k+'pieceGrille'}
+                        key={k+'pieceGrille' + renderingLastMove}
                     />
 
                 );
@@ -230,7 +287,7 @@ class Plateau extends React.Component{
 
         
         if( precPiece !== PIECE.NULL && renderingLastMove)
-            grillePieceElements.push(
+            tablePieceElements.push(
 
                 <Piece 
                     pieceID={precPiece}
@@ -241,20 +298,20 @@ class Plateau extends React.Component{
                     position={{top: (newMove.y*75)+'px' , left: (newMove.x*75)+'px'}}
                     newPosition={{top: (newMove.y*75)+'px' +'', left: (newMove.x*75)+'px'+''}}
 
-                    HandleEndMoveAnim={()=>this.HandleEndMoveAnim()}
+                    HandleEndMoveAnim={(moveType)=>this.HandleEndMoveAnim(moveType)}
 
                     key={99530+'pieceGrille'}
                 />
 
             );
 
-        return grillePieceElements;
+        return tablePieceElements;
 
     }
 
-    generateClickLayer(){
+    generateClickLayer(clickable){
 
-        let grilleClickElements = [];
+        let tableClickElements = [];
 
         for (let i = 0; i < 64 ; i++) 
         {
@@ -265,7 +322,7 @@ class Plateau extends React.Component{
             let isPlayersTile = this.props.status[y][x] * this.playerColor > 0,
                 isMovePossible =  this.state.possibleMoves !== null && this.state.possibleMoves[y][x];
 
-            grilleClickElements.push(
+            tableClickElements.push(
                 <div 
                     key={i+'clickGrille'}
                     className={
@@ -275,7 +332,7 @@ class Plateau extends React.Component{
                     }
 
 
-                    onClick={()=>this.handleClick(x, y)}
+                    onClick={()=>this.handleClick(x, y, clickable)}
                 >
                     
                 </div>
@@ -284,12 +341,13 @@ class Plateau extends React.Component{
             
         }
 
-        return grilleClickElements;
+        return tableClickElements;
     }
 
-    findPossibleMoves(x, y, tour){
+    static findPossibleMoves(x, y, tour, status){
         
-        let table = toggleDirection(this.props.status, tour),
+        let table = toggleDirection(status, tour),
+            possibleMovesList = [], // TODO ::
             possibleMoves = Array(8).fill(null).map(() => Array(8).fill(0));//Innit a 8x8 matrix (JS :/)
 
 
@@ -297,8 +355,9 @@ class Plateau extends React.Component{
 
         //PAWN
         //==============================================================
-        if ( table[y][x] === PIECE.PION) 
+        if ( Math.abs(table[y][x]) === PIECE.PION) 
         {
+
             let  pasclassique = false; // Si on peut fair un pas classique, on met cette variable a 1
 
             //CLASSICAL MOVE
@@ -330,7 +389,145 @@ class Plateau extends React.Component{
                     possibleMoves[y+1][x-1] = 1;
             }
 
-            console.log(possibleMoves);
+        }
+          //ROOK OR QUEEN
+        //==============================================================
+        if ( Math.abs(table[y][x]) === PIECE.TOUR || Math.abs(table[y][x]) === PIECE.REINE) 
+        {
+            let i = 1;
+
+            while ( y+i < 8 && table[y+i][x] * tour <= 0) 
+            {
+                possibleMoves[y+i][x] = 1;
+
+                if (table[y+i][x] * tour < 0)
+
+                    break;
+
+                i++;
+            }
+
+            i = 1;
+            while (  y-i >= 0 && table[y-i][x] * tour <= 0) 
+            {
+                possibleMoves[y-i][x] = 1;
+
+                if (table[y-i][x] * tour < 0)
+
+                    break;
+                i++;
+            }
+
+            i = 1;
+            while ( x+i < 8 && table[y][x+i] * tour <= 0) 
+            {
+                possibleMoves[y][x+i] = 1;
+
+                if (table[y][x+i] * tour < 0)
+
+                    break;
+
+                i++;
+            }
+
+            i = 1;
+            while ( x-i >= 0 && table[y][x-i] * tour <= 0  ) 
+            {
+                possibleMoves[y][x-i] = 1;
+
+                if (table[y][x-i] * tour < 0)
+
+                    break;
+                i++;
+            }
+        }
+        //BISHOP OR QUEEN
+        //==============================================================
+        if ( Math.abs(table[y][x]) === PIECE.FOU || Math.abs(table[y][x]) === PIECE.REINE) 
+        {
+            let i = 1;
+
+            while ( y+i < 8  &&  x+i < 8 && table[y+i][x+i] * tour <= 0 ) 
+            {
+                possibleMoves[y+i][x+i] = 1;
+                
+                if (table[y+i][x+i] * tour < 0 )
+
+                    break;
+
+                i++;
+            }
+
+            i = 1;
+            while ( y-i >= 0  &&  x+i < 8 && table[y-i][x+i] * tour <= 0  ) 
+            {
+                possibleMoves[y-i][x+i] = 1;
+                
+                if (table[y-i][x+i] * tour < 0 )
+                
+                    break;
+                i++;
+            }
+
+            i = 1;
+            while ( y+i < 8  &&  x-i >= 0 && table[y+i][x-i] * tour <= 0) 
+            {
+                possibleMoves[y+i][x-i] = 1;
+
+                if (table[y+i][x-i] * tour < 0)
+
+                    break;
+                i++;
+            }
+
+            i = 1;
+            while ( y-i >= 0  &&  x-i >= 0 && table[y-i][x-i] * tour <= 0 ) 
+            {
+                possibleMoves[y-i][x-i] = 1;
+
+                if (table[y-i][x-i] * tour < 0)
+
+                    break;
+                i++;
+            }
+        }
+        //KNIGHT
+        //==============================================================
+        else if ( Math.abs(table[y][x]) === PIECE.CAVALIER)
+        {
+
+                // ONE FORWARD LEFT DIAGONAL STEP AND ANOTHER STEP TO THE LEFT
+                if ((x > 0 && y > 1) && (table[y-2][x-1] * tour <= 0) )
+                    possibleMoves[y-2][x-1] = 1;
+
+                // ONE FORWARD RIGHT DIAGONAL STEP AND ANOTHER STEP TO THE RIGHT
+                if ((x > 0 && y < 6) && (table[y+2][x-1] * tour <= 0) )
+                    possibleMoves[y+2][x-1] = 1;
+
+                // ONE BACKWARD LEFT DIAGONAL STEP AND ANOTHER ONE TO THE LEFT
+                if ((x < 7 && y > 1) && (table[y-2][x+1] * tour <= 0) )
+                    possibleMoves[y-2][x+1] = 1;
+
+                // ONE BACKWARD RIGHT DIAGONAL STEP AND ANOTHER STEP TO THE RIGHT
+                if ((x < 7 && y < 6) && (table[y+2][x+1] * tour <= 0) )
+                    possibleMoves[y+2][x+1] = 1;
+
+                // ONE FORWARD LEFT DIAGONAL STEP AND ANOTHER FORWARD ONE
+                if ((x > 1 && y > 0) && (table[y-1][x-2] * tour <= 0) )
+                    possibleMoves[y-1][x-2] = 1;
+
+                // ONE FORWARD RIGHT DIAGONAL STEP AND ANOTHER FORWARD ONE
+                if ((x > 1 && y < 7) && (table[y+1][x-2] * tour <= 0) )
+                    possibleMoves[y+1][x-2] = 1;
+
+                // ONE BACKWARD DIAGONAL LEFT MOVE AND ANOTHER FORWARD MOVE
+                if ((x < 6 && y > 0  && (table[y-1][x+2] * tour <= 0) ))
+                    possibleMoves[y-1][x+2] = 1;
+
+                // ONE BACKWARD DIAGONAL RIGHT MOVE AND ANOTHER BACKWARD ONE
+                if ((x < 6 && y < 7) && (table[y+1][x+2] * tour <= 0) )
+                    possibleMoves[y+1][x+2] = 1;
+
         }
 
         return toggleDirection(possibleMoves, tour);
@@ -352,18 +549,21 @@ class Plateau extends React.Component{
     }
 
     render(){
-        console.log(this.state.renderingLastMove);
+        console.log('updage', this.state);
         return(
+
             <div id='plateauCTN'>
+
                 {this.generateGrille(this.state.selectedPiece, this.state.possibleMoves)}
 
-                <div id='piecesCTN' onClick={(e)=>this.handleClick(e)}>
+                <div id='piecesCTN'>
                     {this.generatePieces(this.state.selectedPiece, this.state.moving, this.state.renderingLastMove)}
                 </div>
 
                 <div id='clickLayer'>
-                    {this.generateClickLayer()}
+                    {this.generateClickLayer(this.state.clickable)}
                 </div>
+
             </div>
         );
     }
